@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orçamentador | PIMBAND</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ────── ROOT & GLOBAL ────── */
+        :root {
+            --primary: #6C3B8A;
+            --primary-dark: #4F2A6A;
+            --primary-light: #8B5BAE;
+            --secondary: #F5A623;
+            --accent: #E84D8A;
+            --bg-light: #F8F6FA;
+            --text-dark: #1A1A2E;
+            --text-muted: #6B6B7A;
+            --shadow: 0 12px 40px rgba(108, 59, 138, 0.15);
+            --radius: 20px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .main-card {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2.5rem 2.8rem;
+            transition: var(--transition);
+            border: 1px solid rgba(108, 59, 138, 0.06);
+        }
+
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 1.5rem 1.2rem;
+            }
+            body {
+                padding: 1rem 0.5rem;
+            }
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .brand-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .brand-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text .sub {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .brand-text .sub i {
+            color: var(--secondary);
+            margin-right: 4px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .form-label i {
+            color: var(--primary);
+            margin-right: 6px;
+            width: 18px;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 12px;
+            border: 1.5px solid #E4E0EB;
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background: #FAFAFC;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 59, 138, 0.12);
+            background: #fff;
+        }
+
+        .duration-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.3rem;
+        }
+
+        .duration-btn {
+            padding: 0.55rem 1.2rem;
+            border-radius: 50px;
+            border: 2px solid #E4E0EB;
+            background: #FAFAFC;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+
+        .duration-btn:hover {
+            border-color: var(--primary-light);
+            background: #F3EDF7;
+            color: var(--text-dark);
+        }
+
+        .duration-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(108, 59, 138, 0.35);
+        }
+
+        .duration-btn .badge-price {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.1rem 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .duration-btn.active .badge-price {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .fuel-card {
+            background: #F3EDF7;
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            border-left: 4px solid var(--primary);
+            margin-top: 0.5rem;
+        }
+
+        .fuel-card .fuel-select {
+            max-width: 160px;
+        }
+
+        .fuel-price-display {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .fuel-price-display .price-value {
+            background: #fff;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+
+        .distance-info {
+            background: #EFF6FF;
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            border-left: 4px solid #3B82F6;
+            margin-top: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .distance-info .dist-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1A4B8A;
+        }
+
+        .distance-info .dist-badge {
+            background: #3B82F6;
+            color: #fff;
+            border-radius: 30px;
+            padding: 0.2rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .distance-info .dist-badge.free {
+            background: #10B981;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #F8F6FA, #F0EBF5);
+            border-radius: var(--radius);
+            padding: 1.8rem 2rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(108, 59, 138, 0.10);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(108, 59, 138, 0.06);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-row .label {
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .result-row .value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+
+        .result-row .value.highlight {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .result-total {
+            background: var(--primary);
+            color: #fff;
+            border-radius: 14px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.8rem;
+        }
+
+        .result-total .label {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .result-total .value {
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary);
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 2.2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fff;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(108, 59, 138, 0.30);
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(108, 59, 138, 0.40);
+            color: #fff;
+        }
+
+        .btn-primary-custom:disabled {
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(108, 59, 138, 0.25);
+        }
+
+        .btn-success-custom {
+            background: #10B981;
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 2.2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fff;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.30);
+        }
+
+        .btn-success-custom:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(16, 185, 129, 0.40);
+            color: #fff;
+        }
+
+        .btn-group-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner-overlay.show {
+            display: flex;
+        }
+
+        .spinner-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 2.5rem 3rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .spinner-box .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--primary);
+        }
+
+        .spinner-box p {
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* PDF template – escondido mas acessível para captura */
+        #pdf-preview {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 800px;
+            background: #fff;
+            z-index: -1;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* para impressão */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #pdf-preview,
+            #pdf-preview * {
+                visibility: visible;
+            }
+            #pdf-preview {
+                position: static;
+                left: 0;
+                top: 0;
+                opacity: 1;
+                width: 100%;
+                padding: 20px;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        .animate-in {
+            animation: fadeSlideUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .brand-text h1 {
+                font-size: 1.3rem;
+            }
+            .duration-btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.8rem;
+            }
+            .result-total .value {
+                font-size: 1.5rem;
+            }
+            .fuel-card .fuel-select {
+                max-width: 100%;
+            }
+            .btn-group-actions {
+                flex-direction: column;
+            }
+            .btn-group-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="spinner-overlay" id="loadingOverlay">
+        <div class="spinner-box">
+            <div class="spinner-border" role="status"></div>
+            <p>A processar…</p>
+        </div>
+    </div>
+
+    <div class="main-card">
+
+        <div class="brand-header">
+            <div class="brand-icon">
+                <i class="bi bi-music-note-beamed"></i>
+            </div>
+            <div class="brand-text">
+                <h1>Orçamento Musical</h1>
+                <p class="sub">
+                    <i class="bi bi-geo-alt-fill"></i> Grupo Musical Estrela de Argoncilhe
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary ms-2 fw-normal">Base</span>
+                </p>
+            </div>
+        </div>
+
+        <form id="budgetForm" novalidate>
+            <div class="row g-4">
+
+                <div class="col-md-7">
+                    <label class="form-label" for="clientName">
+                        <i class="bi bi-person-badge"></i> Cliente / Entidade
+                    </label>
+                    <input type="text" class="form-control" id="clientName" placeholder="Ex: Comissão de Festas de S. João..." required />
+                    <div class="invalid-feedback">Por favor, insira o nome do cliente ou entidade.</div>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label" for="repName">
+                        <i class="bi bi-person-workspace"></i> Resp. Orçamento (PIMBAND)
+                    </label>
+                    <input type="text" class="form-control" id="repName" placeholder="O seu nome" required />
+                    <div class="invalid-feedback">Por favor, insira o seu nome.</div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="eventDate">
+                        <i class="bi bi-calendar-event"></i> Data do Evento
+                    </label>
+                    <input type="date" class="form-control" id="eventDate" required />
+                    <div class="invalid-feedback">Por favor, seleccione uma data.</div>
+                </div>
+
+                <div class="col-md-8">
+                    <label class="form-label" for="eventLocation">
+                        <i class="bi bi-geo-alt"></i> Local do Evento
+                    </label>
+                    <input type="text" class="form-control" id="eventLocation"
+                    placeholder="Ex: Rua Principal, 123, Porto"
+                    required />
+                    <div class="invalid-feedback">Por favor, insira o local.</div>
+                    <small class="text-muted" style="font-size:0.75rem;">
+                        <i class="bi bi-info-circle"></i> Insira o endereço completo para cálculo da distância.
+                    </small>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">
+                        <i class="bi bi-clock"></i> Duração
+                    </label>
+                    <div class="duration-group" id="durationGroup">
+                        <button type="button" class="duration-btn" data-value="30min" data-price="250">
+                            30min <span class="badge-price">€250</span>
+                        </button>
+                        <button type="button" class="duration-btn" data-value="1h" data-price="350">
+                            1h <span class="badge-price">€350</span>
+                        </button>
+                        <button type="button" class="duration-btn" data-value="2h" data-price="450">
+                            2h <span class="badge-price">€450</span>
+                        </button>
+                        <button type="button" class="duration-btn" data-value="parte-dia" data-price="500">
+                            Parte do Dia <span class="badge-price">€500</span>
+                        </button>
+                        <button type="button" class="duration-btn" data-value="dia-completo" data-price="1000">
+                            Dia Completo <span class="badge-price">€1000</span>
+                        </button>
+                        <button type="button" class="duration-btn" data-value="custom" data-price="0">
+                            <i class="bi bi-pencil-square me-1"></i> Personalizado
+                        </button>
+                    </div>
+
+                    <div id="customDurationWrapper" style="display:none;" class="mt-3 row g-2">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="customDurationText" placeholder="Descrição (Ex: Jantar + Arraial)" />
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background:#fff; border-color:#E4E0EB;">€</span>
+                                <input type="number" class="form-control" id="customDurationPrice" placeholder="Valor do cachet" min="0" step="0.01" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="selectedDuration" value="" />
+                    <input type="hidden" id="selectedPrice" value="" />
+                    <div class="invalid-feedback" id="durationFeedback">Seleccione uma duração.</div>
+                </div>
+
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <label class="form-label mb-0">
+                            <i class="bi bi-fuel-pump"></i> Combustível e Deslocação
+                        </label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" id="useTolls" checked style="cursor:pointer;">
+                                <label class="form-check-label text-muted" for="useTolls" style="font-size:0.85rem; cursor:pointer;">Usar Autoestrada</label>
+                            </div>
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" id="waiveTravelFee" style="cursor:pointer;">
+                                <label class="form-check-label text-muted" for="waiveTravelFee" style="font-size:0.85rem; cursor:pointer;">Isentar Deslocação</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mt-1">
+                        <div class="col-sm-6">
+                            <div class="fuel-card">
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <span class="fw-semibold" style="font-size:0.9rem;">
+                                        <i class="bi bi-car-front"></i> Carro 1
+                                    </span>
+                                    <select class="form-select form-select-sm fuel-select" id="fuelType1">
+                                        <option value="gasolina">Gasolina</option>
+                                        <option value="gasoleo">Gasóleo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="fuel-card">
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <span class="fw-semibold" style="font-size:0.9rem;">
+                                        <i class="bi bi-car-front"></i> Carro 2
+                                    </span>
+                                    <select class="form-select form-select-sm fuel-select" id="fuelType2">
+                                        <option value="gasolina">Gasolina</option>
+                                        <option value="gasoleo">Gasóleo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <span class="form-label mb-0">
+                            <i class="bi bi-graph-up-arrow"></i> Preço Combustível em Tempo Real
+                            <span class="info-tip" title="Preço médio nacional atualizado diariamente">
+                                <i class="bi bi-question-circle"></i>
+                            </span>
+                        </span>
+                        <div class="fuel-price-display d-flex flex-wrap align-items-center gap-3">
+                            <span>
+                                Gasolina: <span class="price-value" id="priceGasolina">€1,80</span>
+                            </span>
+                            <span>
+                                Gasóleo: <span class="price-value" id="priceGasoleo">€1,70</span>
+                            </span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="refreshFuelBtn" title="Atualizar preços">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                            <span class="badge bg-light text-muted" id="fuelSourceBadge" style="font-size:0.65rem;">
+                                <i class="bi bi-database"></i> cache
+                            </span>
+                        </div>
+                    </div>
+                    <div id="fuelPriceStatus" class="small text-muted mt-1">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size:0.7rem;"></i>
+                        Preços carregados da API pública.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="distance-info" id="distanceInfo">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                            <div>
+                                <span class="fw-semibold" style="font-size:0.9rem;">
+                                    <i class="bi bi-rulers"></i> Distância até ao local
+                                </span>
+                                <span class="dist-value" id="distanceDisplay">—</span>
+                                <span class="dist-badge" id="distanceBadge">A aguardar local</span>
+                            </div>
+                            <div>
+                                <span class="text-muted" style="font-size:0.85rem;">
+                                    <i class="bi bi-car-front"></i> 2 viaturas
+                                </span>
+                            </div>
+                        </div>
+                        <div id="fuelCostDetail" class="mt-2 small" style="display:none;">
+                            <i class="bi bi-calculator"></i>
+                            <span id="fuelCostDetailText">—</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 mt-4 border-top pt-4">
+                    <label class="form-label mb-2">
+                        <i class="bi bi-file-earmark-text"></i> Cláusulas Contratuais (Geradas no PDF)
+                    </label>
+                    <div class="d-flex flex-wrap gap-4 mt-2 mb-2">
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" id="waterClause" checked style="cursor:pointer;">
+                            <label class="form-check-label text-muted" for="waterClause" style="font-size:0.9rem; font-weight:500; cursor:pointer;">Cláusula Água</label>
+                        </div>
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" id="mealClause" style="cursor:pointer;">
+                            <label class="form-check-label text-muted" for="mealClause" style="font-size:0.9rem; font-weight:500; cursor:pointer;">Cláusula Refeição</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- BOTÕES EXATAMENTE COMO PEDIDO: POR CIMA DE CALCULAR E LIMPAR -->
+            <div class="mt-4 d-flex flex-wrap gap-3">
+                <button type="submit" class="btn btn-primary-custom" id="calcBtn">
+                    <i class="bi bi-calculator"></i> Calcular Orçamento
+                </button>
+                <button type="reset" class="btn btn-outline-custom">
+                    <i class="bi bi-arrow-counterclockwise"></i> Limpar
+                </button>
+            </div>
+        </form>
+
+        <div id="resultsContainer" style="display:none;" class="animate-in mt-4">
+            <div class="result-box" id="resultBox">
+                <h5 class="fw-bold mb-3" style="color:var(--primary);">
+                    <i class="bi bi-receipt"></i> Resumo do Orçamento
+                </h5>
+
+                <div class="result-row">
+                    <span class="label"><i class="bi bi-person"></i> Cliente</span>
+                    <span class="value" id="rClient">—</span>
+                </div>
+                <div class="result-row">
+                    <span class="label"><i class="bi bi-calendar3"></i> Data</span>
+                    <span class="value" id="rDate">—</span>
+                </div>
+                <div class="result-row">
+                    <span class="label"><i class="bi bi-geo-alt"></i> Local</span>
+                    <span class="value" id="rLocation">—</span>
+                </div>
+                <div class="result-row">
+                    <span class="label"><i class="bi bi-clock"></i> Duração</span>
+                    <span class="value" id="rDuration">—</span>
+                </div>
+                <div class="result-row">
+                    <span class="label"><i class="bi bi-rulers"></i> Distância (ida)</span>
+                    <span class="value" id="rDistance">—</span>
+                </div>
+
+                <div class="result-row" style="border-bottom: none; padding-bottom: 0.2rem;">
+                    <span class="label"><i class="bi bi-fuel-pump"></i> Custo Deslocação (Arredondado)</span>
+                    <span class="value" id="rFuelCost">—</span>
+                </div>
+                <div class="result-row" id="rowFuelOnly" style="display:none; border-bottom: none; padding-bottom: 0.2rem; padding-top: 0.2rem;">
+                    <span class="label" style="font-size: 0.85rem; padding-left: 1.8rem;"><i class="bi bi-droplet text-secondary"></i> Combustível (2 carros, ida e volta)</span>
+                    <span class="value text-muted" id="rFuelOnly" style="font-size: 0.95rem; font-weight: 500;">—</span>
+                </div>
+                <div class="result-row" id="rowTollsOnly" style="display:none; padding-bottom: 0.6rem; padding-top: 0.2rem;">
+                    <span class="label" style="font-size: 0.85rem; padding-left: 1.8rem;"><i class="bi bi-signpost-split text-secondary"></i> Portagens (2 carros, ida e volta)</span>
+                    <span class="value text-muted" id="rTollsOnly" style="font-size: 0.95rem; font-weight: 500;">—</span>
+                </div>
+
+                <div class="result-row" style="border-bottom:2px solid rgba(108,59,138,0.15);">
+                    <span class="label"><i class="bi bi-music-note"></i> Cache Artístico</span>
+                    <span class="value" id="rArtistFee">—</span>
+                </div>
+
+                <div class="result-total">
+                    <span class="label"><i class="bi bi-wallet2"></i> Total do Orçamento</span>
+                    <span class="value" id="rTotal">€0,00</span>
+                </div>
+
+                <div class="mt-3 small text-muted" id="rExtraDetails" style="border-top:1px solid rgba(108,59,138,0.08); padding-top:0.8rem;">
+                    <i class="bi bi-info-circle"></i>
+                    <span id="rExtraText">Deslocação incluída no orçamento.</span>
+                </div>
+            </div>
+
+            <div class="btn-group-actions mt-4">
+                <button class="btn btn-success-custom" id="generatePdfBtn">
+                    <i class="bi bi-file-pdf"></i> Gerar Orçamento PDF
+                </button>
+                <button class="btn btn-outline-custom" id="printPdfBtn">
+                    <i class="bi bi-printer"></i> Imprimir
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-5 text-center text-muted small border-top pt-3">
+            <i class="bi bi-music-note"></i> PIMBAND &bull; Orçamentador
+            <br />
+            <span style="font-size:0.7rem;">Os preços dos combustíveis são atualizados em tempo real via API pública.</span>
+        </div>
+    </div>
+
+    <!-- PDF TEMPLATE -->
+    <div id="pdf-preview">
+        <div id="pdf-content" style="font-family:'Inter',sans-serif; background:#fff; padding:40px 45px; width:800px; height:1131px; margin:0 auto; color:#1A1A2E; display: flex; flex-direction: column; box-sizing: border-box;">
+
+            <!-- HEADER -->
+            <div style="display:flex; align-items:center; gap:20px; border-bottom:3px solid #6C3B8A; padding-bottom:20px; margin-bottom:24px;">
+                
+                <div style="width:80px; height:80px; flex-shrink:0;">
+                    <img src="https://i.ibb.co/vr9wYx4/pimbandlogo.png" id="pdfLogoImg" alt="Logo da Banda" style="width:130%; height:130%; object-fit:contain; border-radius: 8px;" crossorigin="anonymous" />
+                </div>
+                
+                <div style="flex-grow: 1;">
+                    <h1 style="font-size:1.6rem; font-weight:700; margin:0; letter-spacing:-0.5px; color:#1A1A2E;">Orçamento Musical</h1>
+                    <p style="margin:0; color:#6B6B7A; font-size:0.9rem;">
+                        PIMBAND &bull; <span id="pdfDate">—</span>
+                    </p>
+                </div>
+                
+                <div style="text-align: right; background: #F8F6FA; padding: 10px 15px; border-radius: 8px; border-left: 3px solid #E84D8A;">
+                    <p style="margin:0; font-size:0.75rem; color:#6B6B7A; text-transform: uppercase; letter-spacing: 0.5px;">A/C Cliente</p>
+                    <p style="margin:0; font-size:1.1rem; font-weight:700; color:#1A1A2E;" id="pdfRClient">—</p>
+                </div>
+            </div>
+
+            <!-- INFO -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; margin-bottom:24px; background:#F8F6FA; border-radius:14px; padding:18px 22px;">
+                <div><span style="color:#6B6B7A; font-size:0.8rem;">📅 Data</span><br /><strong id="pdfRDate">—</strong></div>
+                <div><span style="color:#6B6B7A; font-size:0.8rem;">📍 Local</span><br /><strong id="pdfRLocation">—</strong></div>
+                <div><span style="color:#6B6B7A; font-size:0.8rem;">⏱ Duração</span><br /><strong id="pdfRDuration">—</strong></div>
+                <div><span style="color:#6B6B7A; font-size:0.8rem;">📏 Distância</span><br /><strong id="pdfRDistance">—</strong></div>
+            </div>
+
+            <!-- TABLE -->
+            <table style="width:100%; border-collapse:collapse; margin-bottom:20px; font-size:0.95rem;">
+                <thead>
+                    <tr style="border-bottom:2px solid #E4E0EB;">
+                        <th style="text-align:left; padding:8px 0; font-weight:600; color:#4F2A6A;">Descrição</th>
+                        <th style="text-align:right; padding:8px 0; font-weight:600; color:#4F2A6A;">Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom:1px solid #F0EBF5;">
+                        <td style="padding:8px 0;">🎵 Cachet Banda</td>
+                        <td style="text-align:right; padding:8px 0;" id="pdfArtistFee">—</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #F0EBF5;">
+                        <td style="padding:8px 0;">🚗 Custos de Deslocação</td>
+                        <td style="text-align:right; padding:8px 0;" id="pdfFuelCost">—</td>
+                    </tr>
+                    <tr style="border-bottom:2px solid #6C3B8A;">
+                        <td style="padding:12px 0; font-weight:700; font-size:1.1rem;">Total</td>
+                        <td style="text-align:right; padding:12px 0; font-weight:800; font-size:1.4rem; color:#6C3B8A;" id="pdfTotal">—</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- CONTAINER DAS CLÁUSULAS (Inserido Dinamicamente) -->
+            <div id="pdfClausesContainer"></div>
+
+            <!-- CONTAINER DAS ASSINATURAS (Alinhadas e com design correto) -->
+            <div style="display:flex; justify-content: space-between; align-items: flex-end; margin-top: 20px; margin-bottom: 25px;">
+                <div style="width: 42%; text-align: center;">
+                    <div style="border-bottom: 1px solid #1A1A2E; margin-bottom: 8px; height: 35px;"></div>
+                    <span style="font-size: 0.85rem; font-weight: 600; color: #1A1A2E;" id="pdfRepName">—</span><br>
+                    <span style="font-size: 0.65rem; color: #6B6B7A; text-transform: uppercase; letter-spacing: 0.5px;">(Em representação da PIMBAND)</span>
+                </div>
+                <div style="width: 42%; text-align: center;">
+                    <div style="border-bottom: 1px solid #1A1A2E; margin-bottom: 8px; height: 35px;"></div>
+                    <span style="font-size: 0.85rem; font-weight: 600; color: #1A1A2E;" id="pdfSignatureClient">—</span><br>
+                    <span style="font-size: 0.65rem; color: #6B6B7A; text-transform: uppercase; letter-spacing: 0.5px;">(Entidade Contratante)</span>
+                </div>
+            </div>
+
+            <!-- FOOTER ENCOSTADO AO FUNDO VIA FLEXBOX -->
+            <div style="margin-top: auto;">
+                <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; background: #F8F6FA; padding: 14px 22px; border-radius: 12px; font-size: 0.85rem; color: #1A1A2E;">
+                    <div><span style="color:#6C3B8A; font-weight:600;">📞 Telemóvel:</span><br/>+351 919 793 534</div>
+                    <div><span style="color:#6C3B8A; font-weight:600;">✉️ Email:</span><br/>pimband09@gmail.com</div>
+                    <div><span style="color:#6C3B8A; font-weight:600;">📷 Instagram:</span><br/>@pimband_</div>
+                </div>
+                
+                <div style="border-top:2px solid #E4E0EB; padding-top:16px; margin-top:8px; display:flex; justify-content:space-between; font-size:0.75rem; color:#6B6B7A;">
+                    <span>📍 Base: Grupo Musical Estrela de Argoncilhe</span>
+                    <span>Gerado em <span id="pdfGenDate">—</span></span>
+                </div>
+                <div style="font-size:0.7rem; color:#6B6B7A; margin-top:6px; text-align:center; border-top:1px solid #F0EBF5; padding-top:10px;">
+                    <i>Este orçamento é válido por 15 dias. Preços de combustível e portagens atualizados em tempo real.</i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  CONFIG
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        const BASE_ADDRESS = 'Grupo Musical Estrela de Argoncilhe, Argoncilhe, Portugal';
+        const FREE_KM = 5;
+        const CONSUMPTION_GASOLINA = 7.5; // L/100km
+        const CONSUMPTION_GASOLEO = 6.2;  // L/100km
+        const NUM_CARS = 2;
+        
+        // Custo médio cobrado pelas portagens/SCUTs em PT por cada KM (Veículo Classe 1)
+        const TOLL_PRICE_PER_KM = 0.085; 
+        
+        // Multiplicador de distância para trajetos por estrada Nacional (sem autoestrada)
+        const NATIONAL_ROAD_MULTIPLIER = 1.10;
+
+        const DURATION_MAP = {
+            '30min': { label: '30 minutos', price: 250 },
+            '1h': { label: '1 hora', price: 350 },
+            '2h': { label: '2 horas', price: 450 },
+            'parte-dia': { label: 'Parte do dia', price: 500 },
+            'dia-completo': { label: 'Dia completo', price: 1000 },
+        };
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  STATE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        let fuelPrices = {
+            gasolina: 2.30,
+            gasoleo: 2.30,
+        };
+        let fuelSource = 'cache';
+        let baseCoords = null;
+        let lastBaseDistance = null; 
+        let lastDistance = null;     
+        let isCalculating = false;
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  DOM REFS
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        const $ = id => document.getElementById(id);
+        const form = $('budgetForm');
+        const clientInput = $('clientName');
+        const repInput = $('repName'); 
+        const dateInput = $('eventDate');
+        const locationInput = $('eventLocation');
+        
+        const durationBtns = document.querySelectorAll('.duration-btn');
+        const selectedDur = $('selectedDuration');
+        const selectedPrice = $('selectedPrice');
+        const durationFeedback = $('durationFeedback');
+        const customDurationWrapper = $('customDurationWrapper');
+        const customDurationText = $('customDurationText');
+        const customDurationPrice = $('customDurationPrice');
+
+        const useTolls = $('useTolls'); 
+        const waiveTravelFee = $('waiveTravelFee'); 
+        const waterClause = $('waterClause');
+        const mealClause = $('mealClause');
+
+        const fuelType1 = $('fuelType1');
+        const fuelType2 = $('fuelType2');
+        const priceGasolina = $('priceGasolina');
+        const priceGasoleo = $('priceGasoleo');
+        const refreshFuelBtn = $('refreshFuelBtn');
+        const fuelSourceBadge = $('fuelSourceBadge');
+        const fuelPriceStatus = $('fuelPriceStatus');
+        const distanceDisplay = $('distanceDisplay');
+        const distanceBadge = $('distanceBadge');
+        const fuelCostDetail = $('fuelCostDetail');
+        const fuelCostDetailText = $('fuelCostDetailText');
+        const resultsContainer = $('resultsContainer');
+        const loadingOverlay = $('loadingOverlay');
+
+        const rClient = $('rClient');
+        const rDate = $('rDate');
+        const rLocation = $('rLocation');
+        const rDuration = $('rDuration');
+        const rDistance = $('rDistance');
+        
+        const rFuelCost = $('rFuelCost');
+        const rowFuelOnly = $('rowFuelOnly');
+        const rowTollsOnly = $('rowTollsOnly');
+        const rFuelOnly = $('rFuelOnly');
+        const rTollsOnly = $('rTollsOnly');
+
+        const rArtistFee = $('rArtistFee');
+        const rTotal = $('rTotal');
+        const rExtraText = $('rExtraText');
+
+        const pdfDate = $('pdfDate');
+        const pdfRClient = $('pdfRClient');
+        const pdfRDate = $('pdfRDate');
+        const pdfRLocation = $('pdfRLocation');
+        const pdfRDuration = $('pdfRDuration');
+        const pdfRDistance = $('pdfRDistance');
+        const pdfArtistFee = $('pdfArtistFee');
+        const pdfFuelCost = $('pdfFuelCost');
+        const pdfTotal = $('pdfTotal');
+        const pdfGenDate = $('pdfGenDate');
+        
+        const pdfClausesContainer = $('pdfClausesContainer');
+        const pdfRepName = $('pdfRepName'); 
+        const pdfSignatureClient = $('pdfSignatureClient');
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  INIT
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+            geocodeBase();
+            fetchFuelPrices();
+
+            durationBtns.forEach(btn => {
+                btn.addEventListener('click', () => selectDuration(btn));
+            });
+
+            customDurationText.addEventListener('input', () => {
+                if (resultsContainer.style.display !== 'none') calculateBudget();
+            });
+            customDurationPrice.addEventListener('input', () => {
+                selectedPrice.value = customDurationPrice.value;
+                if (resultsContainer.style.display !== 'none') calculateBudget();
+            });
+
+            waiveTravelFee.addEventListener('change', () => {
+                updateDistanceUI();
+                if (resultsContainer.style.display !== 'none') calculateBudget();
+            });
+
+            useTolls.addEventListener('change', () => {
+                updateDistanceUI();
+                if (resultsContainer.style.display !== 'none') calculateBudget();
+            });
+
+            waterClause.addEventListener('change', () => {
+                if (resultsContainer.style.display !== 'none') calculateBudget();
+            });
+            mealClause.addEventListener('change', () => {
+                if (resultsContainer.style.display !== 'none') calculateBudget();
+            });
+
+            refreshFuelBtn.addEventListener('click', () => fetchFuelPrices(true));
+
+            form.addEventListener('submit', handleSubmit);
+            form.addEventListener('reset', handleReset);
+
+            $('generatePdfBtn').addEventListener('click', generatePDF);
+            $('printPdfBtn').addEventListener('click', () => window.print());
+
+            let debounceTimer;
+            locationInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    if (locationInput.value.length > 5) {
+                        calculateDistance();
+                    }
+                }, 600);
+            });
+
+            fuelType1.addEventListener('change', () => { updateDistanceUI();
+                if (resultsContainer.style.display !== 'none') calculateBudget(); });
+            fuelType2.addEventListener('change', () => { updateDistanceUI();
+                if (resultsContainer.style.display !== 'none') calculateBudget(); });
+        });
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  GEOCODE & OSRM
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function geocodeBase() {
+            try {
+                const coords = await geocodeAddress(BASE_ADDRESS);
+                if (coords) baseCoords = coords;
+            } catch (e) { console.warn('Geocode base error:', e); }
+        }
+
+        async function geocodeAddress(address) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`;
+            const resp = await fetch(url, { headers: { 'User-Agent': 'OrcamentoMusical/1.0' } });
+            if (!resp.ok) throw new Error('Geocoding failed');
+            const data = await resp.json();
+            if (!data || data.length === 0) return null;
+            return {
+                lat: parseFloat(data[0].lat),
+                lon: parseFloat(data[0].lon),
+                display: data[0].display_name,
+            };
+        }
+
+        async function getRouteDistance(lat1, lon1, lat2, lon2) {
+            const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error('OSRM failed');
+            const data = await resp.json();
+            if (!data.routes || data.routes.length === 0) throw new Error('No route');
+            return data.routes[0].distance / 1000;
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  FUEL PRICES
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function fetchFuelPrices(force = false) {
+            const DGEG_API = 'https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb';
+
+            async function dgegRequest(endpoint) {
+                const response = await fetch(DGEG_API + endpoint, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    cache: force ? 'no-store' : 'default'
+                });
+                if (!response.ok) throw new Error(`DGEG respondeu com HTTP ${response.status}`);
+                const json = await response.json();
+                if (!json || json.status === false || json.resultado == null) {
+                    throw new Error(json?.mensagem || 'Resposta inválida da DGEG');
+                }
+                return json.resultado;
+            }
+
+            function normalizarTexto(value) {
+                return String(value || '')
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase()
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            function dataLocalISO(date) {
+                const ano = date.getFullYear();
+                const mes = String(date.getMonth() + 1).padStart(2, '0');
+                const dia = String(date.getDate()).padStart(2, '0');
+                return `${ano}-${mes}-${dia}`;
+            }
+
+            async function obterMediaMaisRecente(idCombustivel) {
+                const fim = new Date();
+                const inicio = new Date(fim);
+                inicio.setDate(inicio.getDate() - 30);
+                const endpoint = `/PMD?idsTiposComb=${encodeURIComponent(idCombustivel)}` +
+                    `&dataIni=${dataLocalISO(inicio)}&dataFim=${dataLocalISO(fim)}` +
+                    '&qtdPorPagina=1&pagina=1&orderDesc=1';
+                const resultado = await dgegRequest(endpoint);
+                const registos = Array.isArray(resultado) ? resultado :
+                    (Array.isArray(resultado?.Dados) ? resultado.Dados : []);
+                const valido = registos.find(item => {
+                    const preco = parseFloat(String(item.PrecoMedio ?? '').replace(',', '.'));
+                    return Number.isFinite(preco) && preco > 0;
+                });
+                if (!valido) throw new Error(`A DGEG não devolveu uma média válida para o combustível ${idCombustivel}`);
+                return {
+                    preco: parseFloat(String(valido.PrecoMedio).replace(',', '.')),
+                    data: valido.Data || ''
+                };
+            }
+
+            try {
+                fuelSourceBadge.innerHTML = '<i class="bi bi-arrow-repeat spinner-border spinner-border-sm"></i>';
+                fuelPriceStatus.innerHTML = '<i class="bi bi-hourglass-split"></i> A obter preços diretamente da DGEG...';
+
+                // Usa a API pública oficial da DGEG, sem depender da API Aberta.
+                const combustiveis = await dgegRequest('/GetTiposCombustiveis');
+                if (!Array.isArray(combustiveis)) throw new Error('A DGEG não devolveu a lista de combustíveis.');
+
+                const tipos = combustiveis.filter(item => item && item.fl_rodoviario !== false);
+                const gasolina = tipos.find(item => {
+                    const nome = normalizarTexto(item.Descritivo);
+                    return nome.includes('gasolina simples 95') || nome === 'gasolina 95';
+                });
+                const gasoleo = tipos.find(item => {
+                    const nome = normalizarTexto(item.Descritivo);
+                    return nome.includes('gasoleo simples') || nome === 'gasoleo';
+                });
+                if (!gasolina || !gasoleo) throw new Error('Não foi possível identificar gasolina simples 95 e gasóleo simples na DGEG.');
+
+                const [mediaGasolina, mediaGasoleo] = await Promise.all([
+                    obterMediaMaisRecente(gasolina.Id),
+                    obterMediaMaisRecente(gasoleo.Id)
+                ]);
+
+                // Mantém a margem de 0,06 €/L já usada pelo orçamento.
+                const MARGEM = 0.06;
+                fuelPrices.gasolina = mediaGasolina.preco + MARGEM;
+                fuelPrices.gasoleo = mediaGasoleo.preco + MARGEM;
+                if (!Number.isFinite(fuelPrices.gasolina) || !Number.isFinite(fuelPrices.gasoleo)) {
+                    throw new Error('A DGEG devolveu preços inválidos.');
+                }
+
+                fuelSource = 'dgeg';
+                fuelSourceBadge.innerHTML = '<i class="bi bi-cloud-check"></i> DGEG';
+                const datas = [mediaGasolina.data, mediaGasoleo.data].filter(Boolean);
+                const dataMaisRecente = datas.length ? ` Última data comunicada: ${datas.sort().at(-1)}.` : '';
+                fuelPriceStatus.innerHTML =
+                    `<i class="bi bi-check-circle-fill text-success" style="font-size:0.7rem;"></i> Média nacional oficial da DGEG (+ 6 cêntimos de margem).${dataMaisRecente}`;
+
+            } catch (err) {
+                console.error('Erro ao obter preços diretamente da DGEG:', err);
+                fuelSource = 'error';
+                fuelSourceBadge.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Sem ligação';
+                fuelPriceStatus.innerHTML =
+                    '<i class="bi bi-exclamation-triangle-fill text-warning" style="font-size:0.7rem;"></i> Não foi possível atualizar os preços da DGEG. Os valores apresentados podem estar desatualizados.';
+            }
+
+            priceGasolina.textContent = `€${fuelPrices.gasolina.toFixed(2)}`;
+            priceGasoleo.textContent = `€${fuelPrices.gasoleo.toFixed(2)}`;
+
+            if (resultsContainer.style.display !== 'none') {
+                calculateBudget();
+                updateDistanceUI();
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  DURATION
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function selectDuration(btn) {
+            durationBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedDur.value = btn.dataset.value;
+            
+            if (btn.dataset.value === 'custom') {
+                customDurationWrapper.style.display = 'flex';
+                selectedPrice.value = customDurationPrice.value;
+            } else {
+                customDurationWrapper.style.display = 'none';
+                selectedPrice.value = btn.dataset.price;
+            }
+
+            durationFeedback.style.display = 'none';
+            if (locationInput.value.trim().length > 3 && resultsContainer.style.display !== 'none') {
+                calculateBudget();
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  DISTANCE & UI UPDATES
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function calculateDistance() {
+            const addr = locationInput.value.trim();
+            if (!addr || !baseCoords) {
+                distanceDisplay.textContent = '—';
+                distanceBadge.textContent = 'A aguardar local';
+                distanceBadge.className = 'dist-badge';
+                fuelCostDetail.style.display = 'none';
+                lastBaseDistance = null;
+                lastDistance = null;
+                return;
+            }
+
+            try {
+                const dest = await geocodeAddress(addr);
+                if (!dest) {
+                    distanceDisplay.textContent = '❓';
+                    distanceBadge.textContent = 'Local não encontrado';
+                    distanceBadge.className = 'dist-badge';
+                    fuelCostDetail.style.display = 'none';
+                    return;
+                }
+
+                const dist = await getRouteDistance(baseCoords.lat, baseCoords.lon, dest.lat, dest.lon);
+                lastBaseDistance = dist;
+                
+                updateDistanceUI();
+
+                if (resultsContainer.style.display !== 'none') {
+                    calculateBudget();
+                }
+
+            } catch (err) {
+                console.warn('Erro ao calcular distância:', err);
+                distanceDisplay.textContent = '⚠️';
+                distanceBadge.textContent = 'Erro no cálculo';
+                distanceBadge.className = 'dist-badge';
+                fuelCostDetail.style.display = 'none';
+            }
+        }
+
+        function updateDistanceUI() {
+            if (!lastBaseDistance) return;
+            
+            lastDistance = useTolls.checked ? lastBaseDistance : (lastBaseDistance * NATIONAL_ROAD_MULTIPLIER);
+
+            distanceDisplay.textContent = `${lastDistance.toFixed(1)} km`;
+
+            if (lastDistance <= FREE_KM) {
+                distanceBadge.textContent = '✅ Isento (≤5km)';
+                distanceBadge.className = 'dist-badge free';
+            } else {
+                const modeText = useTolls.checked ? 'via autoestrada' : 'via nacional';
+                distanceBadge.textContent = `🚗 ${lastDistance.toFixed(1)} km (${modeText})`;
+                distanceBadge.className = 'dist-badge';
+            }
+
+            updateFuelEstimate();
+        }
+
+        // Função auxiliar para arredondar portagens por carro estritamente para o ,0 ou ,5 acima
+        function roundTollUp(val) {
+            return Math.ceil(val * 20) / 20;
+        }
+
+        function updateFuelEstimate() {
+            if (waiveTravelFee.checked) {
+                fuelCostDetail.style.display = 'block';
+                fuelCostDetailText.innerHTML = `<span class="text-success"><i class="bi bi-gift"></i> <strong>Isento:</strong> Custos de deslocação oferecidos.</span>`;
+                rowFuelOnly.style.display = 'none';
+                rowTollsOnly.style.display = 'none';
+                return;
+            }
+
+            if (!lastDistance || lastDistance <= FREE_KM) {
+                fuelCostDetail.style.display = 'none';
+                rowFuelOnly.style.display = 'none';
+                rowTollsOnly.style.display = 'none';
+                return;
+            }
+
+            const roundTrip = lastDistance * 2;
+            const f1 = fuelType1.value;
+            const f2 = fuelType2.value;
+            const cons1 = f1 === 'gasolina' ? CONSUMPTION_GASOLINA : CONSUMPTION_GASOLEO;
+            const cons2 = f2 === 'gasolina' ? CONSUMPTION_GASOLINA : CONSUMPTION_GASOLEO;
+            const price1 = f1 === 'gasolina' ? fuelPrices.gasolina : fuelPrices.gasoleo;
+            const price2 = f2 === 'gasolina' ? fuelPrices.gasolina : fuelPrices.gasoleo;
+
+            const liters1 = (roundTrip / 100) * cons1;
+            const liters2 = (roundTrip / 100) * cons2;
+            const cost1 = liters1 * price1;
+            const cost2 = liters2 * price2;
+            
+            const fuelRawCost = cost1 + cost2;
+            
+            let totalTolls = 0;
+            if (useTolls.checked) {
+                const tollDistance = Math.max(0, lastBaseDistance - 5);
+                // Cálculo por carro e arredondamento rigoroso a cada ,0 ou ,5 superior
+                const tollPerCarOneWay = tollDistance * TOLL_PRICE_PER_KM;
+                const roundedTollPerCarOneWay = roundTollUp(tollPerCarOneWay);
+                totalTolls = roundedTollPerCarOneWay * 2 * NUM_CARS;
+            }
+
+            const rawTotalCost = fuelRawCost + totalTolls;
+            const finalCost = Math.ceil(rawTotalCost / 5) * 5;
+
+            let tollText = useTolls.checked ? ` | Portagens: <strong>€${totalTolls.toFixed(2)}</strong>` : ' | <strong>Sem Portagens</strong>';
+
+            fuelCostDetail.style.display = 'block';
+            fuelCostDetailText.innerHTML =
+                `Carros: ${liters1.toFixed(1)}L + ${liters2.toFixed(1)}L. <br>` +
+                `Combustível: <strong>€${fuelRawCost.toFixed(2)}</strong>${tollText} <br>` +
+                `Total Bruto: €${rawTotalCost.toFixed(2)} &nbsp;→&nbsp; <strong style="color:var(--primary);">A cobrar: €${finalCost.toFixed(2)}</strong> (múltiplo de 5)`;
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  SUBMIT
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function handleSubmit(e) {
+            e.preventDefault();
+            if (isCalculating) return;
+
+            let valid = true;
+            
+            if (!clientInput.value.trim()) { clientInput.classList.add('is-invalid'); valid = false; } else clientInput.classList.remove('is-invalid');
+            if (!repInput.value.trim()) { repInput.classList.add('is-invalid'); valid = false; } else repInput.classList.remove('is-invalid');
+            if (!dateInput.value) { dateInput.classList.add('is-invalid'); valid = false; } else dateInput.classList.remove('is-invalid');
+            if (!locationInput.value.trim()) { locationInput.classList.add('is-invalid'); valid = false; } else locationInput.classList.remove('is-invalid');
+            
+            if (!selectedDur.value) { 
+                durationFeedback.textContent = "Seleccione uma duração.";
+                durationFeedback.style.display = 'block'; 
+                valid = false; 
+            } else if (selectedDur.value === 'custom') {
+                if (!customDurationText.value.trim() || !customDurationPrice.value) {
+                    durationFeedback.textContent = "Preencha a descrição e o valor do formato personalizado.";
+                    durationFeedback.style.display = 'block';
+                    valid = false;
+                } else {
+                    durationFeedback.style.display = 'none';
+                }
+            } else {
+                durationFeedback.style.display = 'none';
+            }
+
+            if (!valid) return;
+
+            if (lastBaseDistance === null || lastBaseDistance === undefined) {
+                await calculateDistance();
+            }
+            if (lastBaseDistance === null || lastBaseDistance === undefined) {
+                alert('Não foi possível calcular a distância. Verifique o local.');
+                return;
+            }
+
+            calculateBudget();
+            resultsContainer.style.display = 'block';
+            resultsContainer.classList.remove('animate-in');
+            void resultsContainer.offsetWidth;
+            resultsContainer.classList.add('animate-in');
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  CALCULATE BUDGET (final)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function calculateBudget() {
+            const durKey = selectedDur.value;
+            let artistFee = 0;
+            let durationLabel = '';
+
+            if (durKey === 'custom') {
+                artistFee = parseFloat(customDurationPrice.value) || 0;
+                durationLabel = customDurationText.value.trim() || 'Personalizado';
+            } else {
+                const durInfo = DURATION_MAP[durKey];
+                if (!durInfo) return;
+                artistFee = durInfo.price;
+                durationLabel = durInfo.label;
+            }
+
+            let finalDisplacementCost = 0;
+            let fuelDetail = '';
+
+            if (waiveTravelFee.checked) {
+                finalDisplacementCost = 0;
+                fuelDetail = 'Oferta (Isento manualmente)';
+                rowFuelOnly.style.display = 'none';
+                rowTollsOnly.style.display = 'none';
+            } else if (lastDistance > FREE_KM) {
+                const roundTrip = lastDistance * 2;
+                const f1 = fuelType1.value;
+                const f2 = fuelType2.value;
+                const cons1 = f1 === 'gasolina' ? CONSUMPTION_GASOLINA : CONSUMPTION_GASOLEO;
+                const cons2 = f2 === 'gasolina' ? CONSUMPTION_GASOLINA : CONSUMPTION_GASOLEO;
+                const price1 = f1 === 'gasolina' ? fuelPrices.gasolina : fuelPrices.gasoleo;
+                const price2 = f2 === 'gasolina' ? fuelPrices.gasolina : fuelPrices.gasoleo;
+
+                const liters1 = (roundTrip / 100) * cons1;
+                const liters2 = (roundTrip / 100) * cons2;
+                const cost1 = liters1 * price1;
+                const cost2 = liters2 * price2;
+                
+                const rawFuelCost = cost1 + cost2;
+                
+                let totalTolls = 0;
+                if (useTolls.checked) {
+                    const tollDistance = Math.max(0, lastBaseDistance - 5);
+                    const tollPerCarOneWay = tollDistance * TOLL_PRICE_PER_KM;
+                    const roundedTollPerCarOneWay = roundTollUp(tollPerCarOneWay);
+                    totalTolls = roundedTollPerCarOneWay * 2 * NUM_CARS;
+                }
+                
+                const rawTotalCost = rawFuelCost + totalTolls;
+                finalDisplacementCost = Math.ceil(rawTotalCost / 5) * 5; 
+                
+                rFuelOnly.textContent = `€${rawFuelCost.toFixed(2)}`;
+                rowFuelOnly.style.display = 'flex';
+
+                if (useTolls.checked) {
+                    rTollsOnly.textContent = `€${totalTolls.toFixed(2)}`;
+                    rowTollsOnly.style.display = 'flex';
+                } else {
+                    rowTollsOnly.style.display = 'none';
+                }
+
+                let tollDetailStr = useTolls.checked ? ` + €${totalTolls.toFixed(2)} portagens` : ' (sem portagens)';
+                fuelDetail = `Matemática (Combustível: €${rawFuelCost.toFixed(2)}${tollDetailStr}): €${rawTotalCost.toFixed(2)}. Arredondado.`;
+            } else {
+                fuelDetail = 'Isento (≤5km)';
+                rowFuelOnly.style.display = 'none';
+                rowTollsOnly.style.display = 'none';
+            }
+
+            const total = artistFee + finalDisplacementCost;
+            const dateStr = dateInput.value ? new Date(dateInput.value).toLocaleDateString('pt-PT') : '—';
+            const clientStr = clientInput.value.trim() || '—';
+            const repStr = repInput.value.trim() || '—';
+
+            rClient.textContent = clientStr;
+            rDate.textContent = dateStr;
+            rLocation.textContent = locationInput.value.trim() || '—';
+            rDuration.textContent = durationLabel;
+            rDistance.textContent = lastDistance > 0 ? `${lastDistance.toFixed(1)} km` : '—';
+            rArtistFee.textContent = `€${artistFee.toFixed(2)}`;
+
+            if (finalDisplacementCost > 0) {
+                rFuelCost.textContent = `€${finalDisplacementCost.toFixed(2)}`;
+                rExtraText.innerHTML = `Deslocação: ${lastDistance.toFixed(1)} km × 2 carros. ${fuelDetail}`;
+            } else if (waiveTravelFee.checked) {
+                rFuelCost.textContent = '€0,00 (Oferta)';
+                rExtraText.innerHTML = `<span class="text-success"><i class="bi bi-gift"></i> Isenção de custos de deslocação aplicada.</span>`;
+            } else {
+                rFuelCost.textContent = '€0,00 (isento)';
+                rExtraText.innerHTML = `Deslocação isenta (dentro dos ${FREE_KM} km da base).`;
+            }
+
+            rTotal.textContent = `€${total.toFixed(2)}`;
+
+            window._pdfData = {
+                client: clientStr,
+                rep: repStr,
+                date: dateStr,
+                location: locationInput.value.trim(),
+                duration: durationLabel,
+                distance: lastDistance > 0 ? `${lastDistance.toFixed(1)} km` : '—',
+                artistFee: `€${artistFee.toFixed(2)}`,
+                fuelCost: finalDisplacementCost > 0 ? `€${finalDisplacementCost.toFixed(2)}` : (waiveTravelFee.checked ? '€0,00 (Oferta)' : '€0,00 (isento)'),
+                total: `€${total.toFixed(2)}`,
+                includeWater: waterClause.checked,
+                includeMeal: mealClause.checked
+            };
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  GENERATE PDF
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function generatePDF() {
+            const data = window._pdfData;
+            if (!data) {
+                alert('Calcule primeiro o orçamento.');
+                return;
+            }
+
+            const now = new Date().toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' });
+            pdfDate.textContent = now;
+            pdfGenDate.textContent = new Date().toLocaleString('pt-PT');
+            
+            pdfRClient.textContent = data.client;
+            pdfRDate.textContent = data.date;
+            pdfRLocation.textContent = data.location;
+            pdfRDuration.textContent = data.duration;
+            pdfRDistance.textContent = data.distance;
+            pdfArtistFee.textContent = data.artistFee;
+            pdfFuelCost.textContent = data.fuelCost;
+            pdfTotal.textContent = data.total;
+
+            pdfRepName.textContent = data.rep;
+            pdfSignatureClient.textContent = data.client;
+
+            let clausesHtml = '<div style="margin-bottom: 25px; font-size: 0.8rem; color: #4F2A6A; line-height: 1.5; text-align: justify; background: #F8F6FA; padding: 18px; border-radius: 12px;">';
+            clausesHtml += '<strong style="display:block; margin-bottom: 10px; font-size: 0.9rem;">Condições Acordadas:</strong>';
+            
+            if (data.includeWater) {
+                clausesHtml += '<p style="margin: 0 0 8px 0;">&bull; A entidade contratante compromete-se a assegurar o fornecimento de águas engarrafadas à banda, em quantidade adequada, durante todo o período da atuação e montagem.</p>';
+            }
+            if (data.includeMeal) {
+                clausesHtml += '<p style="margin: 0 0 8px 0;">&bull; A entidade contratante compromete-se a fornecer refeição adequada a todos os elementos da banda e equipa técnica no local do evento ou nas suas imediações.</p>';
+            }
+            
+            clausesHtml += '<p style="margin: 0;">&bull; Ao assinar o presente orçamento-contrato, a entidade contratante assume o compromisso irrevogável de assegurar a realização da atuação e proceder ao respetivo pagamento, salvo ocorrência de motivos de força maior comprovadamente alheios à sua vontade.</p>';
+            clausesHtml += '</div>';
+
+            pdfClausesContainer.innerHTML = clausesHtml;
+
+            loadingOverlay.classList.add('show');
+
+            try {
+                const preview = document.getElementById('pdf-preview');
+                preview.style.position = 'absolute';
+                preview.style.left = '0';
+                preview.style.top = '0';
+                preview.style.width = '800px';
+                preview.style.opacity = '1';
+                preview.style.pointerEvents = 'none';
+                preview.style.zIndex = '-1';
+                preview.style.background = '#fff';
+
+                await new Promise(r => setTimeout(r, 300));
+
+                const element = document.getElementById('pdf-content');
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    width: 800
+                });
+
+                preview.style.position = 'absolute';
+                preview.style.left = '-9999px';
+                preview.style.opacity = '0';
+
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save(`Orcamento_${data.client.replace(/[^a-z0-9]/gi, '_')}_${data.date.replace(/\//g,'-')}.pdf`);
+
+            } catch (err) {
+                console.error('Erro no PDF:', err);
+                alert('Erro ao gerar o PDF. Tente novamente.');
+            } finally {
+                loadingOverlay.classList.remove('show');
+                document.getElementById('pdf-preview').style.position = 'absolute';
+                document.getElementById('pdf-preview').style.left = '-9999px';
+                document.getElementById('pdf-preview').style.opacity = '0';
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  RESET
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function handleReset() {
+            durationBtns.forEach(b => b.classList.remove('active'));
+            selectedDur.value = '';
+            selectedPrice.value = '';
+            customDurationWrapper.style.display = 'none';
+            customDurationText.value = '';
+            customDurationPrice.value = '';
+            
+            waiveTravelFee.checked = false;
+            useTolls.checked = true; 
+            waterClause.checked = true;
+            mealClause.checked = false;
+
+            resultsContainer.style.display = 'none';
+            rowFuelOnly.style.display = 'none';
+            rowTollsOnly.style.display = 'none';
+            
+            lastBaseDistance = null;
+            lastDistance = null;
+            distanceDisplay.textContent = '—';
+            distanceBadge.textContent = 'A aguardar local';
+            distanceBadge.className = 'dist-badge';
+            fuelCostDetail.style.display = 'none';
+            clientInput.classList.remove('is-invalid');
+            repInput.classList.remove('is-invalid');
+            locationInput.classList.remove('is-invalid');
+            dateInput.classList.remove('is-invalid');
+            durationFeedback.style.display = 'none';
+            
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+            clientInput.value = '';
+            repInput.value = '';
+            
+            updateDistanceUI();
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  EXTRA: refresh fuel on visibility
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                const lastFetch = sessionStorage.getItem('fuelLastFetch');
+                const now = Date.now();
+                if (!lastFetch || (now - parseInt(lastFetch)) > 300000) {
+                    fetchFuelPrices();
+                    sessionStorage.setItem('fuelLastFetch', String(now));
+                }
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('calcBtn').click();
+            }
+        });
+
+        console.log('🎵 Orçamento Musical carregado (Versão Final + Arredondamento Rigoroso de Portagens)');
+    </script>
+</body>
+</html>
